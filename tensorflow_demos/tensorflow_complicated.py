@@ -21,19 +21,22 @@ batch_size = 128
 # used only in hidden layer
 dropout = 0.5 #prevents overfitting
 
-x = tf.placeholder(shape=(None, n_input), dtype=tf.float32, name="input")
+# x = tf.placeholder(shape=(None, n_input), dtype=tf.float32, name="input")
 x = tf.placeholder(tf.float32, [None, n_input])
 y = tf.placeholder(tf.float32, [None, n_output])
 
 # controls dropout rate
 keep_prob = tf.placeholder(dtype=tf.float32)
 
+
+
+# *********************************************************************************
 weights = {
     # 'w1': tf.Variable(tf.random_uniform([n_input, n_hidden_1], minval=-0.05, maxval=0.05), dtype=tf.float32)
     # tf.Variable(tf.random_normal([n_input, n_hidden_1], stddev = 0.03)
     'w1': tf.Variable(tf.truncated_normal([n_input, n_hidden_1], stddev=0.1, name = 'w1')),
-    'w2': tf.Variable(tf.truncated_normal([n_hidden_1, n_hidden_2], stddev=0.1), name = 'w2'),
-    'w3': tf.Variable(tf.truncated_normal([n_hidden_2, n_hidden_3], stddev=0.1), name = 'w3'),
+    'w2': tf.Variable(tf.truncated_normal([n_hidden_1, n_hidden_2], stddev=0.1), name ='w2'),
+    'w3': tf.Variable(tf.truncated_normal([n_hidden_2, n_hidden_3], stddev=0.1), name ='w3'),
     'out': tf.Variable(tf.truncated_normal([n_hidden_3, n_output], stddev=0.1))
 }
 # truncated: values follow normal distribution, except that those values whose magnitude is more than 2 std are dropped and repicked
@@ -50,9 +53,14 @@ layer3 = tf.nn.relu(tf.add(tf.matmul(layer2, weights['w3']), biases['b3']))
 layer_drop = tf.nn.dropout(layer3, keep_prob)
 output_layer = tf.matmul(layer3, weights['out'])+biases['out']
 
+
+
+
+# ***********************************************************************
+
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=output_layer))
 # ce = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits)
-cross_entropy = -tf.reduce_mean(tf.reduce_sum(y*tf.log(y)+ (1-y)*tf.log(1-y), axis = 1))
+# cross_entropy = -tf.reduce_mean(tf.reduce_sum(y*tf.log(y)+ (1-y)*tf.log(1-y), axis=1))
 
 optimizer = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
 
