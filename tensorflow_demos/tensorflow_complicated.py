@@ -73,23 +73,23 @@ sess.run(init)
 
 for i in range(n_iterations):
     batch_x, batch_y = data.train.next_batch(batch_size)
-
+    feed_dict = {x: batch_x,
+                 y: batch_y}
     # with tf.Session() as sess
     sess.run(optimizer, feed_dict={x: batch_x,
                                      y: batch_y,
                                      keep_prob: dropout})
-
+    # optimizer.run(feed_dict=feed_dict)
     if i%100 == 0:
-        minibatch_loss, minibatch_accuracy = sess.run([cross_entropy, accuracy], feed_dict={x: batch_x,
-                                                                                            y: batch_y,
-                                                                                            keep_prob: 1})
+        minibatch_loss, minibatch_accuracy = sess.run([cross_entropy, accuracy], feed_dict= feed_dict)
 
         print('Iteration', str(i), '\t Loss=', str(minibatch_loss), '\t Accuracy', str(minibatch_accuracy))
-
+        # train_accuracy = accuracy.eval(feed_dict=feed_dict)
 
 test_accuracy = sess.run(accuracy, feed_dict={x: data.test.images,
                                                       y: data.test.labels, keep_prob:1.})
-
+est_accuracy = accuracy.eval(feed_dict={x: data.test.images,
+                                        y: data.test.labels, keep_prob:1.})
 
 print('Accuracy on test set: ', test_accuracy)
 
