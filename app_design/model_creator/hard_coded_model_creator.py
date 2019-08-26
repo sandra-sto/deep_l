@@ -16,8 +16,8 @@ class HardCodedModelCreator(ModelCreator):
 
         model = Sequential(name = "MiniVGG")
         with tf.name_scope('Conv_Block_1'):
-            model.add(InputLayer(input_shape=input_shape))
-            model.add(Conv2D(32, (3, 3), padding="same"))
+            # model.add(InputLayer(input_shape=input_shape))
+            model.add(Conv2D(32, (3, 3), padding="same", input_shape=input_shape))
             model.add(Activation(tf.keras.layers.Lambda(lambda t: tf.nn.crelu(t))))
             model.add(BatchNormalization(axis = chanDim))
             model.add(Conv2D(32, (3, 3), padding="same"))
